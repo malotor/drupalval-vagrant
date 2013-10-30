@@ -1,6 +1,6 @@
 <VirtualHost *:80>
     ServerAdmin webmaster@localhost
-    ServerName virtual1.dev
+    ServerName drupalval.dev
 
     DocumentRoot /var/www/
     <Directory />

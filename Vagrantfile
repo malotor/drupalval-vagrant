@@ -1,11 +1,11 @@
 # DrupalVal
-box      = 'lucid64'
-url      = 'http://files.vagrantup.com/lucid64.box'
+box      = 'precise64'
+url      = 'http://files.vagrantup.com/precise64.box'
 hostname = 'drupalval'
-domain   = 'virtual1.dev'
-ip       = '192.168.56.101'
+domain   = 'drupalval.dev'
+ip       = '192.168.56.102'
 ram      = '256'
-shared_dir = '~/Sites'
+shared_dir = "~/Sites"
 
 
 Vagrant.configure("2") do |config|
@@ -23,7 +23,7 @@ Vagrant.configure("2") do |config|
   end
 
   
-  config.vm.synced_folder :shared_dir, "/var/www/", id: "vagrant-root" ,:owner => "vagrant", :group => "www-data"
+  config.vm.synced_folder "~/Sites", "/var/www/", id: "vagrant-root" ,:owner => "vagrant", :group => "www-data"
   
 
   config.vm.provision :puppet do |puppet|
