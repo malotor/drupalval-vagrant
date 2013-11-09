@@ -7,5 +7,6 @@ class apache_vhosts {
     ensure => directory;
   }
 
-  apache_vhosts::vhost { ['default']: }
+  apache_vhosts::vhost { ['default','drupal7','drupal8']: }
+  
 }

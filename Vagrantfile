@@ -1,11 +1,13 @@
-# DrupalVal
+# Example 5
+#
+# Single box with LAMP stack and sample static/dynamic sites via Puppet.
+#
 box      = 'precise64'
 url      = 'http://files.vagrantup.com/precise64.box'
 hostname = 'drupalval'
-domain   = 'drupalval.dev'
-ip       = '192.168.56.102'
-ram      = '256'
-shared_dir = "~/Sites"
+domain   = 'virtual1.dev'
+ip       = '192.168.56.101'
+ram      = '512'
 
 
 Vagrant.configure("2") do |config|
@@ -23,7 +25,7 @@ Vagrant.configure("2") do |config|
   end
 
   
-  config.vm.synced_folder "~/Sites", "/var/www/", id: "vagrant-root" ,:owner => "vagrant", :group => "www-data"
+  config.vm.synced_folder "./Sites", "/vagrant/sites", id: "vagrant-root" ,:owner => "vagrant", :group => "www-data"
   
 
   config.vm.provision :puppet do |puppet|

@@ -1,7 +1,11 @@
-DrupalVal Vagrant profile
+vagrant-lamp
 ============
 
-Installation instrucctions
+Vagrant lamp puppet config
 
-- Clone the repository into your hard disk
-- Up the virtual machine with "vagrant up"
+Features:
+
+- Apache
+- Virtual Host
+- Mysql
+- PHP

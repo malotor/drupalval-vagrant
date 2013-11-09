@@ -7,7 +7,7 @@ class baseconfig {
     command => '/usr/bin/apt-get update';
   }
   
-  package { ['git']:
+  package { ['php-pear','wget','git']:
     ensure => present;
   }
 

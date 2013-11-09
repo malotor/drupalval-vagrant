@@ -1,0 +1,21 @@
+<VirtualHost *:80>
+    ServerAdmin webmaster@localhost
+    ServerName drupal8.virtual1.dev
+
+    DocumentRoot /var/www/drupal8
+    RewriteEngine On
+    <Directory /var/www/drupal8>
+        Options Indexes FollowSymLinks MultiViews
+        AllowOverride All
+        Order allow,deny
+        allow from all
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/drupal8.log
+
+    # Possible values include: debug, info, notice, warn, error, crit,
+    # alert, emerg.
+    LogLevel warn
+
+    CustomLog ${APACHE_LOG_DIR}/drupal8.log combined
+</VirtualHost>

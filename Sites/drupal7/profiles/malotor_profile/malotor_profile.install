@@ -1,0 +1,332 @@
+<?php
+/**
+ * @file
+ * Install, update and uninstall functions for the standard installation profile.
+ */
+
+/**
+ * Implements hook_install().
+ *
+ * Perform actions to set up the site for this profile.
+ *
+ * @see system_install()
+ */
+function malotor_profile_install() {
+
+  
+
+  
+  include_once DRUPAL_ROOT . '/profiles/standard/standard.install';
+  standard_install();
+  
+  
+  
+  //Add full html format
+  $full_html_format = array(
+    'format' => 'full_html',
+    'name' => 'Full HTML',
+    'weight' => 1,
+    'filters' => array(
+      // URL filter.
+      'filter_url' => array(
+        'weight' => 0,
+        'status' => 1,
+      ),
+      // Line break filter.
+      'filter_autop' => array(
+        'weight' => 1,
+        'status' => 1,
+      ),
+      // HTML corrector filter.
+      'filter_htmlcorrector' => array(
+        'weight' => 10,
+        'status' => 1,
+      ),
+    ),
+  );
+  $full_html_format = (object) $full_html_format;
+  filter_format_save($full_html_format);
+
+  // Enable some standard blocks.
+  $default_theme = variable_get('theme_default', 'malotor_responsive');
+  $admin_theme = 'shiny';
+  
+ 
+
+  // Add image to blog entries
+  $instance = array(
+    'field_name' => 'field_image',
+    'entity_type' => 'node',
+    'label' => 'Image',
+    'bundle' => 'blog',
+    'description' => st('Upload an image to go with this blog entrie.'),
+    'required' => FALSE,
+
+    'settings' => array(
+      'file_directory' => 'field/image',
+      'file_extensions' => 'png gif jpg jpeg',
+      'max_filesize' => '',
+      'max_resolution' => '',
+      'min_resolution' => '',
+      'alt_field' => TRUE,
+      'title_field' => '',
+    ),
+
+    'widget' => array(
+      'type' => 'image_image',
+      'settings' => array(
+        'progress_indicator' => 'throbber',
+        'preview_image_style' => 'thumbnail',
+      ),
+      'weight' => -1,
+    ),
+
+    'display' => array(
+      'default' => array(
+        'label' => 'hidden',
+        'type' => 'image',
+        'settings' => array('image_style' => 'large', 'image_link' => ''),
+        'weight' => -1,
+      ),
+      'teaser' => array(
+        'label' => 'hidden',
+        'type' => 'image',
+        'settings' => array('image_style' => 'medium', 'image_link' => 'content'),
+        'weight' => -1,
+      ),
+    ),
+  );
+  field_create_instance($instance);
+
+
+  //Prevent to override from standard profile
+  unset($vocabulary);
+
+  // Create categories vocacubalry vocabulary
+  $description = st('Use categories to classify your blog entriew.');
+  $help = st('Select one category for your content');
+  $vocabulary = (object) array(
+    'name' => st('Category'),
+    'description' => $description,
+    'machine_name' => 'category',
+    'help' => $help,
+
+  );
+  taxonomy_vocabulary_save($vocabulary);
+
+  //Create the fiels for category vocabulary
+  $field = array(
+    'field_name' => 'field_' . $vocabulary->machine_name,
+    'type' => 'taxonomy_term_reference',
+    // Set cardinality to unlimited for tagging.
+    'cardinality' => 1,
+    'settings' => array(
+      'allowed_values' => array(
+        array(
+          'vocabulary' => $vocabulary->machine_name,
+          'parent' => 0,
+        ),
+      ),
+    ),
+  );
+  field_create_field($field);
+  //Add a fiels intance for the blog entries
+  $instance = array(
+    'field_name' => 'field_' . $vocabulary->machine_name,
+    'entity_type' => 'node',
+    'label' => 'Category',
+    'bundle' => 'blog',
+    'description' => $vocabulary->help,
+    'widget' => array(
+      'type' => 'taxonomy_autocomplete',
+      'weight' => -4,
+    ),
+    'display' => array(
+      'default' => array(
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 10,
+      ),
+      'teaser' => array(
+        'type' => 'taxonomy_term_reference_link',
+        'weight' => 10,
+      ),
+    ),
+  );
+  field_create_instance($instance);
+    
+  //Add editor role
+  $role = new stdClass;
+  $role->name = 'Editor';
+  $role->weight = 3;
+  user_role_save($role);
+  $roleid_1 = $role->rid;
+  
+  
+  
+  $perms_editor = array(
+  'search content',
+  'access administration pages',
+  'access content overview',
+  'access contextual links',
+  'access dashboard',
+  'access site in maintenance mode',
+  'access site reports',
+  'access site-wide contact form',
+  'access toolbar',
+  'access user contact forms',
+  'access user profiles',
+  'administer comments',
+  'administer contact forms',
+  'administer google analytics',
+  'administer nodequeue',
+  'administer nodes',
+  'administer redirects',
+  'administer shortcuts',
+  'administer users',
+  'administer xmlsitemap',
+  'create page content',
+  'create url aliases',
+  'customize shortcut links',
+  'delete any page content',
+  'delete own page content',
+  'delete revisions',
+  'delete terms in 1',
+  'edit any page content',
+  'edit meta tags',
+  'edit own comments',
+  'edit own page content',
+  'edit terms in 1',
+  'manipulate all queues',
+  'manipulate queues',
+  'opt-in or out of tracking',
+  'post comments',
+  'revert revisions',
+  'search content',
+  'switch shortcut sets',
+  'translate content',
+  'translate interface',
+  'use advanced search',
+  'use text format full_html',
+  'view own unpublished content',
+  'view revisions',
+  );
+  
+  //Enable default theme
+  $enable = array(
+    'theme_default' => 'responsive_bartik',
+  );
+  theme_enable($enable);
+  
+  // Enable the admin theme.
+  db_update('system')
+    ->fields(array('status' => 1))
+    ->condition('type', 'theme')
+    ->condition('name', 'ember')
+    ->execute();
+    
+
+  // Activate default temes
+  variable_set('theme_default','responsive_bartik');
+  variable_set('admin_theme', 'ember');
+  variable_set('node_admin_theme', '1');
+  
+  //Site default config
+  variable_set('toggle_name', '0');
+  
+  //Pathauto
+  variable_set('pathauto_node_pattern', '[node:content-type]/[node:title].html');
+ 
+
+  //Language
+  locale_add_language('es', 'Spanish', 'Español', '0',  '', '', TRUE, FALSE);
+   
+  variable_set('locale_language_negotiation_session_param','language');
+  variable_set('locale_language_negotiation_url_part','0');
+  variable_set('locale_language_providers_weight_language',array(
+    'language-default' => '-8',
+    'locale-url' => '-10',
+    'locale-session' => '-9',
+    'locale-user' => '-7',
+    'locale-browser' => '-6',
+  ));
+  
+  
+  //Enable multilingual suport for content types
+  variable_set('language_content_type_page', '2');  
+  variable_set('language_content_type_article', '2');
+    
+  variable_set('date_default_timezone', 'Europe/Madrid');
+  variable_set('date_first_day', '1');
+  variable_set('site_default_country', 'ES');
+  
+
+  //Format dates
+  variable_set('date_format_short', 'd/m/Y - H:i');
+  variable_set('date_format_medium', 'D, d/m/Y - H:i');
+  variable_set('date_format_long', 'l, j F, Y - H:i');
+  
+  
+  //IMCE profiles
+  variable_set('imce_profiles',array(
+    1 => array(
+      'name' => 'Standard',
+      'usertab' => 1,
+      'filesize' => '8',
+      'quota' => '0',
+      'tuquota' => '0',
+      'extensions' => 'jpg png',
+      'dimensions' => '800x600',
+      'filenum' => '0',
+      'directories' => array(
+        0 => array(
+          'name' => '.',
+          'subnav' => 1,
+          'browse' => 1,
+          'upload' => 1,
+          'thumb' => 1,
+          'delete' => 1,
+          'resize' => 1,
+        ),
+      ),
+      'thumbnails' => array(
+        0 => array(
+          'name' => 'Small',
+          'dimensions' => '90x90',
+          'prefix' => 'small_',
+          'suffix' => '',
+        ),
+        1 => array(
+          'name' => 'Medium',
+          'dimensions' => '120x120',
+          'prefix' => 'medium_',
+          'suffix' => '',
+        ),
+        2 => array(
+          'name' => 'Large',
+          'dimensions' => '180x180',
+          'prefix' => 'large_',
+          'suffix' => '',
+        ),
+      ),
+    ),
+  ));
+ 
+  variable_set('imce_roles_profiles',array(
+    4 => array(
+      'weight' => '0',
+      'public_pid' => '1',
+    ),
+    3 => array(
+      'weight' => '0',
+      'public_pid' => '1',
+    ),
+    2 => array(
+      'weight' => 11,
+      'public_pid' => 0,
+    ),
+    1 => array(
+      'weight' => 12,
+      'public_pid' => 0,
+    ),
+  ));
+}

@@ -1,0 +1,20 @@
+name = Author profile
+description = This module provides a block that shows an node´s author profile
+core = 7.x
+package = DevelClub
+version = 7.x-1.0
+files[] = author_profile_functions.inc.php
+files[] = author_profile_token.inc.php
+files[] = author_profile_profile.tpl.php
+files[] = author_profile_profile.tpl.php
+files[] = author_profile_social_widgets.tpl.php
+files[] = author_profile.admin.inc
+files[] = author_profile.install
+files[] = author_profile.module
+configure = admin/config/people/author_profile
+
+; Information added by drush on 2013-11-07
+version = "master-dev"
+project = "author_hcard"
+datestamp = "1383861568"
+

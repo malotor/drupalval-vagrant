@@ -18,4 +18,10 @@ define apache_vhosts::vhost() {
       ensure => link,
       target => "/vagrant/sites/${name}";
   }
+
+  #exec { 'load-${name}-sql':
+  #    command => 'mysql -u root -proot < /vagrant/sites/sql/${name}.sql',
+  #    path    => ['/bin', '/usr/bin'],
+  #    require => Exec['set-mysql-password'];
+  # }
 }

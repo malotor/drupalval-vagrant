@@ -1,15 +1,12 @@
 <VirtualHost *:80>
     ServerAdmin webmaster@localhost
-    ServerName drupalval.dev
+    ServerName virtual1.dev
 
-    DocumentRoot /var/www/
-    <Directory />
-        Options FollowSymLinks
-        AllowOverride None
-    </Directory>
-        <Directory /var/www/>
+    DocumentRoot /var/www/default
+    RewriteEngine On
+    <Directory /var/www/default>
         Options Indexes FollowSymLinks MultiViews
-        AllowOverride None
+        AllowOverride All
         Order allow,deny
         allow from all
     </Directory>

@@ -1,0 +1,65 @@
+<?php
+
+/**
+* @file
+* Author hcar module
+* Install and uninstall command for Author hcar module. 
+*/
+
+require_once('author_profile_functions.inc.php');
+
+/**
+  * Implements hook_install().
+  */
+function author_profile_install() {
+  
+  
+   // create all the fields we are adding to our content type
+  foreach (_author_profile_installed_fields() as $field) {
+    if (!field_info_field($field['field_name']))  field_create_field($field);
+  }
+  
+  // create all the instance for our fields
+  foreach (_author_profile_installed_instances() as $instance) {
+    
+    $instance['entity_type'] = 'user';
+    $instance['bundle'] = 'user';
+    
+    
+    if (!field_info_instance($instance['field_name'], $instance['field_name'], $instance['bundle'])) {
+      field_create_instance($instance);
+    }
+  }
+    
+  //Create the image style for users avatar
+  
+  $style = image_style_save(array('name' => 'blog-author-image'));
+  $effect = array(
+    'name' => 'image_scale',
+    'data' => array(
+      'width' => 64,
+      'height' => 64,
+      'upscale' => TRUE,
+    ),
+    'isid' => $style['isid'],
+  );
+  image_effect_save($effect);
+  
+  
+  
+}
+
+/**
+  * Implements hook_uninstall().
+  */
+function author_profile_uninstall() {
+  
+  // delete all the fields defined by this module
+  foreach (array_keys(_author_profile_installed_fields()) as $field) {
+      if (field_info_field($field)) field_delete_field($field);
+  }
+  //Removes the image style
+  
+  image_style_delete(image_style_load('blog-author-image'));
+  
+}
