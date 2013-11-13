@@ -25,7 +25,7 @@ Vagrant.configure("2") do |config|
   end
 
   
-  config.vm.synced_folder "./Sites", "/vagrant/sites", id: "vagrant-root" ,:owner => "vagrant", :group => "www-data"
+  config.vm.synced_folder "./Sites", "/vagrant/sites", id: "vagrant-root" ,:owner => "vagrant", :group => "www-data", :mount_options => ["dmode=2775","fmode=775"]
   
 
   config.vm.provision :puppet do |puppet|

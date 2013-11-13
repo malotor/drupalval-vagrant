@@ -231,7 +231,7 @@ $databases = array();
  *   $drupal_hash_salt = file_get_contents('/home/example/salt.txt');
  *
  */
-$drupal_hash_salt = 'qV6dRCtv77qQblPTlELg71Ia4xz3Os5lbaCp6Re5PjM';
+$drupal_hash_salt = '8ny7YOGwf1aEBech4tWXwZYqjgqGKX6SXAd1bjXAOHU';
 
 /**
  * Location of the site configuration files.
@@ -666,16 +666,6 @@ $databases['default']['default'] = array (
   'driver' => 'mysql',
   'prefix' => '',
 );
-$settings['install_profile'] = 'standard';
-$config_directories['active']['path'] = 'config_QZ99JoLY2EWUgZVOelnAnv4hknx3fp87BOmWKU0EvWI/active';
-$config_directories['staging']['path'] = 'config_QZ99JoLY2EWUgZVOelnAnv4hknx3fp87BOmWKU0EvWI/staging';
-$databases['default']['default'] = array (
-  'database' => 'drupal8',
-  'username' => 'root',
-  'password' => 'root',
-  'host' => 'localhost',
-  'port' => '',
-  'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
-  'driver' => 'mysql',
-  'prefix' => '',
-);
+$settings['install_profile'] = 'drupalkanban';
+$config_directories['active']['path'] = 'config__hzvRO7y6gW0LXbDAZzYQ1JZ2Iy425X9xojX9YfYRoo/active';
+$config_directories['staging']['path'] = 'config__hzvRO7y6gW0LXbDAZzYQ1JZ2Iy425X9xojX9YfYRoo/staging';
