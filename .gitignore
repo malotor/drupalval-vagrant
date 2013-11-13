@@ -1,3 +1,4 @@
 .vagrant/*
 Sites/*
 *.DS_Store
+settings.php
